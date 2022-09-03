@@ -52,7 +52,7 @@ fun main() {
     println("Player 2, please enter your name:")
     val playerName2 = readln().trim()
     while (true) {
-        println("Hello $playerName1, please chose cross or circle?")
+        println("Hello $playerName1, please choose cross or circle?")
         when (val pAnswer = readln().trim()) {
             "circle" -> {
                 player1 = Player(name = playerName1, turn = true, symbol = Symbol.CIRCLE)
@@ -70,7 +70,12 @@ fun main() {
         }
     }
     drawBoardWithNumbers()
+    var tK = false
     while (!isGameOver(board)) {
+        if (!isDraw(board)) {
+            tK = true
+            break
+        }
         if (player1.turn) println("It's your turn $playerName1, chose a number to place your ${player1.symbol}") else println(
             "It's your turn $playerName2, chose a number to place your ${player2.symbol}"
         )
@@ -99,7 +104,9 @@ fun main() {
             }
         }
     }
-    if (player1.turn) println("$playerName2 wins!!!") else println("$playerName1 wins!!!")
+    if (tK) println("Game is draw, no winner awarded!")
+    else if (player1.turn) println("$playerName2 wins!!!") else println("$playerName1 wins!!!")
+
 }
 
 fun isGameOver(board: MutableList<Position>): Boolean {
@@ -120,3 +127,5 @@ fun isGameOver(board: MutableList<Position>): Boolean {
 
     return horizontalCheckFirstLine || horizontalCheckSecondLine || horizontalCheckThirdLine || verticalCheckFirstColumn || verticalCheckSecondColumn || verticalCheckThirdColumn || diagonalCheckFirstLine || diagonalCheckSecondLine
 }
+
+fun isDraw(board: MutableList<Position>) = board.any { it.symbol != Symbol.CIRCLE.s && it.symbol != Symbol.CROSS.s }
